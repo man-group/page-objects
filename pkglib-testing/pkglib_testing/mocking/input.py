@@ -3,7 +3,7 @@
 import getpass
 from contextlib import contextmanager
 
-from six.moves import builtins, input as raw_input
+from pkglib_util.six.moves import builtins, input as raw_input
 
 
 @contextmanager

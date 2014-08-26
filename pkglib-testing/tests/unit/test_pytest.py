@@ -1,5 +1,6 @@
 from pkglib_testing.pytest import pytest_generate_tests
-from mock import Mock
+from pkglib_util.six.moves import mock
+Mock = mock.Mock
 
 
 def test_generates_ids_from_tuple():

@@ -7,6 +7,7 @@ This library contains useful helpers for writing unit and acceptance tests.
 import os
 import socket
 
+from pkglib_util import six
 from pkglib_testing import config
 
 # Global config for finding system resources.
@@ -25,3 +26,5 @@ CONFIG = config.TestingConfig(
     httpd_executable=os.getenv('PKGLIB_TESTING_HTTPD', "/usr/sbin/apache2"),
     httpd_modules=os.getenv('PKGLIB_TESTING_HTTPD_MODULES', "/usr/lib/apache2/modules"),
 )
+
+six.add_move(six.MovedModule('mock', 'mock', 'unittest.mock'))

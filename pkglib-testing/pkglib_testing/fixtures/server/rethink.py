@@ -1,7 +1,6 @@
 import socket
 
 import pytest
-import rethinkdb
 import uuid
 import logging
 import time
@@ -49,6 +48,7 @@ def rethink_unique_db(rethink_server_sess):
     """ Starts up a session-scoped server, and returns a connection to
         a unique database for the life of a single test, and drops it after
     """
+    import rethinkdb
     dbid = uuid.uuid4().hex
     conn = rethink_server_sess.conn
     rethinkdb.db_create(dbid).run(conn)
@@ -63,6 +63,8 @@ def rethink_module_db(rethink_server_sess):
         a unique database for all the tests in one module.
         Drops the database after module tests are complete.
     """
+    # Deferred import here - tests that require rethink might be skipped
+    import rethinkdb
     dbid = uuid.uuid4().hex
     conn = rethink_server_sess.conn
     log.info("Making database")
@@ -75,6 +77,7 @@ def rethink_module_db(rethink_server_sess):
 
 @pytest.fixture(scope="module")
 def rethink_make_tables(request, rethink_module_db):
+    import rethinkdb
     reqd_table_list = getattr(request.module, 'FIXTURE_TABLES')
     log.debug("Do stuff before all module tests with {}"
              .format(reqd_table_list))
@@ -86,7 +89,7 @@ def rethink_make_tables(request, rethink_module_db):
                                                ).run(conn)
             log.info('Made table "{}" with key "{}"'
                      .format(table_name, primary_key))
-        except RqlRuntimeError, err:
+        except RqlRuntimeError as err:
             log.debug('Table "{}" not made: {}'.format(table_name,
                                                       err.message))
 
@@ -99,6 +102,7 @@ def rethink_empty_db(request, rethink_module_db, rethink_make_tables):
         This is a useful approach, because of the long time taken to
         create a new RethinkDB table, compared to the time to empty one.
     """
+    import rethinkdb
     tables_to_emptied = (table[0] for table
                          in getattr(request.module, 'FIXTURE_TABLES'))
     conn = rethink_module_db
@@ -130,6 +134,7 @@ class RethinkDBServer(TestServer):
 
     def check_server_up(self):
         """Test connection to the server."""
+        import rethinkdb
         log.info("Connecting to RethinkDB at {}:{}".format(
             self.hostname, self.port))
         try:

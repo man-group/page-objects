@@ -12,8 +12,8 @@ from pkglib_testing import cmdline
 from pkglib_testing.fixtures import workspace
 
 
-def test_workspace_run_displays_output_on_failure():
-    p = subprocess.Popen([sys.executable, '-c', """from pkglib_testing.fixtures.workspace import Workspace
+
+CMD = """from pkglib_testing.fixtures.workspace import Workspace
 from subprocess import CalledProcessError
 try:
     Workspace().run('echo stdout; echo stderr >&2; false', capture=True)
@@ -21,7 +21,10 @@ except CalledProcessError:
     pass
 else:
     raise RuntimeError("did not raise")
-"""], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+"""
+def test_workspace_run_displays_output_on_failure():
+    p = subprocess.Popen([sys.executable, "-c", CMD],
+                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     out = p.communicate()[0]
     assert p.returncode == 0
     assert 'stdout\n'.encode('utf-8') in out

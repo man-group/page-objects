@@ -1,7 +1,10 @@
 import os
 from subprocess import PIPE, STDOUT
 
-from mock import patch, sentinel
+try:
+    from mock import patch, sentinel
+except ImportError:
+    from unittest.mock import patch, sentinel
 
 from pkglib_util import cmdline
 

@@ -12,10 +12,10 @@ import traceback
 from datetime import datetime
 import logging
 
-from six import string_types
-from six.moves import http_client
-from six.moves.urllib.request import urlopen
-from six.moves.urllib.error import URLError
+from pkglib_util.six import string_types
+from pkglib_util.six.moves import http_client
+from pkglib_util.six.moves.urllib.request import urlopen
+from pkglib_util.six.moves.urllib.error import URLError
 
 from pkglib_testing import CONFIG
 from ..workspace import Workspace
@@ -231,8 +231,11 @@ class TestServer(Workspace):
         # Wait for server to die.
         for _ in range(retries):
             netstat_cmd = ("netstat -anp 2>/dev/null | grep %s:%s | grep LISTEN | "
-                           "awk '{ print $7 }' | cut -d'/' -f1" % (socket.gethostbyname(self.hostname), self.port))
-            pids = [p.strip() for p in self.run(netstat_cmd, capture=True, cd='/').split('\n') if p.strip()]
+                           "awk '{ print $7 }' | cut -d'/' -f1" %
+                           (socket.gethostbyname(str(self.hostname)), str(self.port)))
+            pids = [p.strip()
+                    for p in self.run(netstat_cmd, capture=True, cd='/').split('\n')
+                    if p.strip()]
 
             if not pids:
                 # No PIDs remaining, server has died.

@@ -32,9 +32,9 @@ class Test(Command):
         pass
 
     def run(self):
+        self.distribution.fetch_build_eggs(self.distribution.tests_require)
         import subprocess
         import pytest
-
         tests = []
         if not (self.unit or self.integration):
             tests = ['tests']
@@ -42,7 +42,12 @@ class Test(Command):
             tests.append(os.path.join('tests', 'unit'))
         if self.integration:
             tests.append(os.path.join('tests', 'integration'))
-        errno = subprocess.call([sys.executable, pytest.__file__] + tests + trailing_args)
+
+        # Make sure to add any downloaded eggs to sys.path
+        env = dict(os.environ)
+        env['PYTHONPATH'] = os.pathsep.join(sys.path)
+        errno = subprocess.call([sys.executable, pytest.__file__] + tests + trailing_args,
+                                env=env)
         raise SystemExit(errno)
 
 
@@ -57,11 +62,14 @@ def main():
                 sys.argv = sys.argv[:-len(trailing_args)]
                 break
 
+    if sys.version_info.major < 3:
+        tests_require.append('mock')
+
     setup(
         name='pkglib-util',
         description='PkgLib Utility Library',
         long_description=long_description,
-        version='0.10.6',
+        version='0.10.7',
         # url='',
         license='MIT license',
         platforms=['unix', 'linux'],

@@ -6,9 +6,9 @@ import logging
 
 import pytest
 
-from six.moves import http_client
-from six.moves.urllib.request import urlopen
-from six.moves.urllib.error import URLError
+from pkglib_util.six.moves import http_client
+from pkglib_util.six.moves.urllib.request import urlopen
+from pkglib_util.six.moves.urllib.error import URLError
 
 from .base import TestServer
 

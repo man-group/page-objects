@@ -11,11 +11,10 @@ import textwrap
 from contextlib import closing
 from subprocess import Popen, PIPE
 
-from mock import patch
 import execnet
 
 from pkglib_util.six import string_types
-from pkglib_util.six.moves import cPickle  # @UnresolvedImport
+from pkglib_util.six.moves import cPickle, mock  # @UnresolvedImport
 
 try:
     # Python 3
@@ -37,7 +36,7 @@ def run_as_main(fn, *argv):
     This is equivalent to ``Foo foo bar``, assuming
     ``scripts.Foo.main`` is registered as an entry point.
     """
-    with patch("sys.argv", new=['progname'] + list(argv)):
+    with mock.patch("sys.argv", new=['progname'] + list(argv)):
         print("run_as_main: %s" % str(argv))
         fn()
 
@@ -49,7 +48,7 @@ def run_module_as_main(module, argv=[]):
     filename = os.path.basename(module.__file__)
     filename = os.path.splitext(filename)[0] + ".py"
 
-    with patch("sys.argv", new=argv):
+    with mock.patch("sys.argv", new=argv):
         imp.load_source('__main__', os.path.join(where, filename))
 
 

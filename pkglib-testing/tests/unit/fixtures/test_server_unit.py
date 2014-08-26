@@ -1,4 +1,7 @@
-from mock import create_autospec, sentinel, call, patch
+try:
+    from mock import create_autospec, sentinel, call, patch
+except ImportError:
+    from unittest.mock import create_autospec, sentinel, call, patch
 
 from pkglib_testing.fixtures.server.base import TestServer
 
