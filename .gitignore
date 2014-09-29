@@ -16,8 +16,10 @@ lib64
 
 # Unit test / coverage reports
 .coverage
+.tox
 
 # IDEs 
+.idea
 .project
 .pydevproject
 .settings
