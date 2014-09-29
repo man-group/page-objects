@@ -3,7 +3,11 @@ import subprocess
 
 from subprocess import CalledProcessError, PIPE
 
-from mock import patch
+try:
+    from mock import patch
+except ImportError:
+    from unittest.mock import patch, sentinel
+
 from pytest import raises
 
 from pkglib_util import cmdline

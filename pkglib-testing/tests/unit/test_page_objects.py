@@ -6,7 +6,7 @@ Created on 1 Oct 2012
 import inspect
 
 import pytest
-import mock
+from pkglib_util.six.moves import mock
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 

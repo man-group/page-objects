@@ -37,9 +37,9 @@ class Test(Command):
         pass
 
     def run(self):
+        self.distribution.fetch_build_eggs(self.distribution.tests_require)
         import subprocess
         import pytest
-
         tests = []
         if not (self.unit or self.integration):
             tests = ['tests']
@@ -47,8 +47,14 @@ class Test(Command):
             tests.append(os.path.join('tests', 'unit'))
         if self.integration:
             tests.append(os.path.join('tests', 'integration'))
-        errno = subprocess.call([sys.executable, pytest.__file__] + tests + trailing_args)
+
+        # Make sure to add any downloaded eggs to sys.path
+        env = dict(os.environ)
+        env['PYTHONPATH'] = os.pathsep.join(sys.path)
+        errno = subprocess.call([sys.executable, pytest.__file__] + tests + trailing_args,
+                                env=env)
         raise SystemExit(errno)
+
 
 
 def main():
@@ -62,27 +68,37 @@ def main():
                 sys.argv = sys.argv[:-len(trailing_args)]
                 break
 
-    # TODO: split these up into optional deps
     install_requires = ['pytest',
                         'pytest-cov',
-                        'mock',
                         'contextlib2',
                         'execnet',
-                        'redis',
-                        'selenium',
-                        'pymongo',
-                        'rethinkdb',
-                        'SQLAlchemy',
                         'path.py',
-                        'python-jenkins',
                         'pkglib_util',
-                        'six',
                         ]
+
+    if sys.version_info.major < 3:
+        install_requires.append('mock')
+
+    extras_require = {'redis': ['redis'],
+                      'selenium': ['selenium'],
+                      'mongo': ['pymongo'],
+                      'rethink': ['rethinkdb'],
+                      'sa': ['SQLAlchemy'],
+                      'jenkins': ['python-jenkins'],
+                      }
+
+    tests_require = ['redis',
+                     'selenium',
+                     'pymongo',
+                     'rethinkdb',
+                     'SQLAlchemy',
+                     'python-jenkins']
+
     setup(
         name='pkglib-testing',
         description='PkgLib testing library',
         long_description=long_description,
-        version='0.10.6',
+        version='0.10.7',
         # url='',
         license='MIT license',
         platforms=['unix', 'linux'],
@@ -90,6 +106,7 @@ def main():
         author_email='eeaston@gmail.com',
         classifiers=classifiers,
         install_requires=install_requires,
+        tests_require=tests_require,
         cmdclass={'test': Test},
         packages=find_packages(),
     )

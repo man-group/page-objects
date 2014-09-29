@@ -8,7 +8,6 @@ from __future__ import absolute_import
 import os.path
 import shutil
 
-import jenkins
 import pytest
 
 from pkglib_testing import CONFIG
@@ -41,6 +40,7 @@ class JenkinsTestServer(HTTPTestServer):
                         JAVA_ARGS='-Xmx1G',
                         JENKINS_LOG=self.workspace / 'jenkins.log',
                         )
+        import jenkins
         self.api = jenkins.Jenkins(self.uri)
 
     @property

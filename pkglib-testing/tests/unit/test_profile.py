@@ -7,7 +7,11 @@ from pkglib_util.six.moves import reload_module  # @UnresolvedImport
 import pkglib_testing.profile
 reload_module(pkglib_testing.profile)
 from pkglib_testing.profile import Profiling, pytest_addoption, pytest_configure
-from mock import Mock, ANY, patch, sentinel
+try:
+    from mock import Mock, ANY, patch, sentinel
+except ImportError:
+    from unittest.mock import Mock, ANY, patch, sentinel
+
 
 
 def test_creates_prof_dir():

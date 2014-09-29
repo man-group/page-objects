@@ -1,4 +1,4 @@
-import mock
+from pkglib_util.six.moves import mock
 
 from pkglib_testing.fixtures import venv
 from pkglib_testing import env
