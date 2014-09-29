@@ -18,8 +18,8 @@ test: tox
 
 publish: wheel
 	python setup.py register
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
+	python setup.py sdist upload --sign 7228A0D2
+	python setup.py bdist_wheel upload --sign 7228A0D2
 
 docs-init:
 	pip install -r docs/requirements.txt

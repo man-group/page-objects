@@ -1,8 +1,6 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
-__version__ = "1.0.0"
-
 
 class PageObject(object):
     """Page Object pattern.

@@ -12,7 +12,7 @@ webdriver.
 Documentation
 -------------
 
-http://rtfd.org/projects/page-objects
+https://page-objects.readthedocs.org
 
 
 Quick Example

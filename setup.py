@@ -7,7 +7,6 @@ try:
 except ImportError:
     from distutils.core import setup
 
-import page_objects
 
 here = os.path.dirname(__file__)
 if here:
@@ -22,7 +21,7 @@ requires = ['selenium']
 
 setup(
     name='page_objects',
-    version=page_objects.__version__,
+    version='1.0.0',
     description='Page Objects for Python',
     long_description=readme + '\n\n' + changes,
     author='Edward Easton',
