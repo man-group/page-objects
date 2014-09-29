@@ -1,6 +1,7 @@
 Page Objects for Python
 =======================
 
+
 Page Objects are a testing pattern for websites. Page Objects model a page on
 your site and provide accessors and methods for interacting with this page,
 both to reduce boilerplate and provide a single place for element locators.
@@ -45,6 +46,11 @@ Project History
 This was originally part of the pkglib project at http://github.com/ahlmss/pkglib,
 it has been forked to retain history.
 
+
+.. toctree::
+   :maxdepth: 2
+
+   CHANGES
 
 Indices and tables
 ==================
