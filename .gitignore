@@ -14,6 +14,10 @@ develop-eggs
 lib
 lib64
 
+# Autodoc
+docs/_build
+docs/api
+
 # Unit test / coverage reports
 .coverage
 .tox

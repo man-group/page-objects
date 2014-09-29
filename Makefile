@@ -1,7 +1,7 @@
 .PHONY: docs wheel tox
 
-TOX=$(shell (which tox))
-WHEEL=$(shell (which wheel))
+TOX := $(shell (which tox))
+WHEEL := $(shell (which wheel))
 
 tox:
 ifeq ($(strip $(TOX)),)
@@ -25,6 +25,8 @@ docs-init:
 	pip install -r docs/requirements.txt
 
 docs:
+	python setup.py develop
+	sphinx-apidoc page_objects -o docs/api
 	cd docs && make html
 
 clean:

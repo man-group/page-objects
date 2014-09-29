@@ -1,42 +1,16 @@
-'''
-Created on 26 Sep 2012
-
-@author: eeaston
-
-Website testing Page Objects
-'''
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 __version__ = "1.0.0"
 
+
 class PageObject(object):
-    """ Page Object pattern.
+    """Page Object pattern.
 
-        Parameters
-        ----------
-
-        webdriver: `selenium.webdriver.WebDriver`
-            Selenium webdriver instance
-        root_uri: `str`
-            Root URI, set by the pyramid_server funcarg if available
-
-        Examples
-        --------
-        With page elements::
-
-            from pkglib_testing.page_objects import PageObject, page_element
-
-            class LoginPage(PageObject):
-                username = page_element(id_='username')
-                password = page_element(name='username')
-                login = page_element(css='input[type="submit"]')
-
-            login_page = LoginPage(webdriver, locators)
-            login_page.username = 'foo'
-            assert login_page.username.text == 'foo'
-            login_page.login.click()
-
+    :param webdriver: `selenium.webdriver.WebDriver`
+        Selenium webdriver instance
+    :param root_uri: `str`
+        Root URI, set by the pyramid_server funcarg if available
     """
     def __init__(self, webdriver, root_uri=None):
         self.w = webdriver
@@ -44,16 +18,15 @@ class PageObject(object):
 
 
 class PageElement(object):
-    """ Page Element pattern.
+    """Page Element pattern.
 
-        Parameters
-        ----------
-        webdriver: `selenium.webdriver.WebDriver`
-            Selenium webdriver instance
+     :param webdriver: `selenium.webdriver.WebDriver`
+         Selenium webdriver instance
 
-        Required Attributes:
-        locator:  (`selenium.webriver.common.by.By`, locator text)
-          Eg: 'login.username': (By.ID, 'username'),  (By.XPATH, '//password)'
+     Requires the ``locator`` attribute to be set as:
+        (`selenium.webriver.common.by.By`, locator text)
+
+     Eg: 'login.username': (By.ID, 'username'),  (By.XPATH, '//password)'
 
     """
     locator = None
@@ -101,31 +74,27 @@ _LOCATOR_MAP = {'css': By.CSS_SELECTOR,
 def page_element(klass=PageElement, **kwargs):
     """ Factory method for page elements
 
-        Parameters
-        ----------
-        css:    `str`
-            Use this css locator
-        id_:    `str`
-            Use this element ID locator
-        name:    `str`
-            Use this element name locator
-        xpath:    `str`
-            Use this xpath locator
-        link_text:    `str`
-            Use this link text locator
-        partial_link_text:    `str`
-            Use this partial link text locator
-        tag_name:    `str`
-            Use this tag name locator
-        class_name:    `str`
-            Use this class locator
+    :param css:    `str`
+        Use this css locator
+    :param id_:    `str`
+        Use this element ID locator
+    :param name:    `str`
+        Use this element name locator
+    :param xpath:    `str`
+        Use this xpath locator
+    :param link_text:    `str`
+        Use this link text locator
+    :param partial_link_text:    `str`
+        Use this partial link text locator
+    :param tag_name:    `str`
+        Use this tag name locator
+    :param class_name:    `str`
+        Use this class locator
 
-        Examples
-        --------
-        Page Elements can be used like this::
+    Page Elements can be used like this::
 
-            from pkglib_testing.page_objects import PageObject, page_element
-            class MyPage(PageObject)
+        >>> from page_objects import PageObject, page_element
+        >>> class MyPage(PageObject):
                 elem1 = page_element(css='div.myclass')
                 elem2 = page_element(id_='foo')
 
