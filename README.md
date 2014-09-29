@@ -21,8 +21,6 @@ https://page-objects.readthedocs.org
 Quick Example
 -------------
 
-.. code-block:: pycon
-
     >>> from page_objects import PageObject, page_element
     >>> from selenium import webdriver
     >>>
@@ -42,8 +40,6 @@ Quick Example
 
 Installation
 ------------
-
-.. code-block:: bash
 
     $ pip install page_objects
 
