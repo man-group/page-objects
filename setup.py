@@ -26,7 +26,7 @@ setup(
     long_description=readme + '\n\n' + changes,
     author='Edward Easton',
     author_email='eeaston@gmail.com',
-    url='http://githum.com/eeaston/page-objects',
+    url='http://github.com/eeaston/page-objects',
     packages=['page_objects'],
     package_data={'': ['LICENSE']},
     include_package_data=True,
