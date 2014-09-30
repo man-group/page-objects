@@ -8,11 +8,19 @@ class PageObject(object):
     :param webdriver: `selenium.webdriver.WebDriver`
         Selenium webdriver instance
     :param root_uri: `str`
-        Root URI, set by the pyramid_server funcarg if available
+        Root URI to base any calls to the ``PageObject.get`` method. If not defined
+        in the constructor it will try and look it from the webdriver object.
     """
     def __init__(self, webdriver, root_uri=None):
         self.w = webdriver
         self.root_uri = root_uri if root_uri else getattr(self.w, 'root_uri', None)
+
+    def get(self, uri):
+        """
+        :param uri:  URI to GET, based off of the root_uri attribute.
+        """
+        root_uri = self.root_uri or ''
+        self.w.get(root_uri + uri)
 
 
 class PageElement(object):

@@ -55,3 +55,38 @@ def test_set_descriptors():
     webdriver.find_element.return_value = elem
     page.test_elem1 = "XXX"
     elem.send_keys.assert_called_once_with('XXX')
+
+
+def test_root_uri_from_constructor():
+    class TestPage(PageObject):
+        pass
+    webdriver = mock.Mock(spec=WebDriver)
+    page = TestPage(webdriver=webdriver, root_uri="http://example.com")
+    assert page.root_uri == 'http://example.com'
+
+
+def test_root_uri_from_webdriver():
+    class TestPage(PageObject):
+        pass
+    webdriver = mock.Mock(spec=WebDriver, root_uri="http://example.com/foo")
+    page = TestPage(webdriver=webdriver)
+    assert page.root_uri == 'http://example.com/foo'
+
+
+def test_get():
+    class TestPage(PageObject):
+        pass
+    webdriver = mock.Mock(spec=WebDriver)
+    page = TestPage(webdriver=webdriver, root_uri="http://example.com")
+    page.get('/foo/bar')
+    assert webdriver.get.called_once_with("http://example.com/foo/bar")
+
+
+def test_get_no_root():
+    class TestPage(PageObject):
+        pass
+    webdriver = mock.Mock(spec=WebDriver)
+    page = TestPage(webdriver=webdriver)
+    page.get('/foo/bar')
+    assert webdriver.get.called_once_with("/foo/bar")
+

@@ -31,8 +31,9 @@ Quick Example
             login = page_element(css='input[type="submit"]')
     >>>
     >>> driver = webdriver.PhantomJS()
-    >>> driver.get("http://example.com")
+    >>> driver.root_uri = "http://example.com"
     >>> page = LoginPage(driver)
+    >>> page.get("/login")
     >>> page.username = 'secret'
     >>> page.password = 'squirrel'
     >>> assert page.username.text == 'secret'
