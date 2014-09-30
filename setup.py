@@ -12,7 +12,7 @@ here = os.path.dirname(__file__)
 if here:
     os.chdir(here)
 
-with open('README.md', 'r', 'utf-8') as f:
+with open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
 with open('CHANGES.rst', 'r', 'utf-8') as f:
     changes = f.read()
@@ -20,7 +20,7 @@ with open('CHANGES.rst', 'r', 'utf-8') as f:
 requires = ['selenium']
 
 setup(
-    name='page_objects',
+    name='page-objects',
     version='1.0.0',
     description='Page Objects for Python',
     long_description=readme + '\n\n' + changes,

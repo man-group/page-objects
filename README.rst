@@ -8,8 +8,9 @@ both to reduce boilerplate and provide a single place for element locators.
 This project is an implementation of this pattern for Python using Selenium
 webdriver.
 
-[![Build Status](https://travis-ci.org/eeaston/page-objects.svg?branch=master)](https://travis-ci.org/eeaston/page-objects)
 
+.. image:: https://travis-ci.org/eeaston/page-objects.svg?branch=master
+    :target: https://travis-ci.org/eeaston/page-objects
 
 
 Documentation
