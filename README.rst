@@ -29,7 +29,7 @@ Quick Example
             username = page_element(id_='username')
             password = page_element(name='password')
             login = page_element(css='input[type="submit"]')
-
+    >>>
     >>> driver = webdriver.PhantomJS()
     >>> driver.get("http://example.com")
     >>> page = LoginPage(driver)
