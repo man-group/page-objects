@@ -2,6 +2,18 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
+# Map PageElement constructor arguments to webdriver locator enums
+_LOCATOR_MAP = {'css': By.CSS_SELECTOR,
+                'id_': By.ID,
+                'name': By.NAME,
+                'xpath': By.XPATH,
+                'link_text': By.LINK_TEXT,
+                'partial_link_text': By.PARTIAL_LINK_TEXT,
+                'tag_name': By.TAG_NAME,
+                'class_name': By.CLASS_NAME,
+                }
+
+
 class PageObject(object):
     """Page Object pattern.
 
@@ -24,61 +36,7 @@ class PageObject(object):
 
 
 class PageElement(object):
-    """Page Element pattern.
-
-     :param webdriver: `selenium.webdriver.WebDriver`
-         Selenium webdriver instance
-
-     Requires the ``locator`` attribute to be set as:
-        (`selenium.webriver.common.by.By`, locator text)
-
-     Eg: 'login.username': (By.ID, 'username'),  (By.XPATH, '//password)'
-
-    """
-    locator = None
-
-    def __init__(self):
-        assert self.locator is not None
-
-    def __get__(self, instance, owner):
-        if not instance:
-            return None
-        try:
-            return instance.w.find_element(*self.locator)
-        except NoSuchElementException:
-            return None
-
-    def __set__(self, instance, value):
-        elem = self.__get__(instance, None)
-        if not elem:
-            raise ValueError("Can't set value, element not found")
-        elem.send_keys(value)
-
-
-class MultiPageElement(PageElement):
-    """ Like `_PageElement` but returns multiple results
-    """
-    def __get__(self, instance, owner):
-        try:
-            return instance.w.find_elements(*self.locator)
-        except NoSuchElementException:
-            return []
-
-
-# Map factory arguments to webdriver locator enums
-_LOCATOR_MAP = {'css': By.CSS_SELECTOR,
-                'id_': By.ID,
-                'name': By.NAME,
-                'xpath': By.XPATH,
-                'link_text': By.LINK_TEXT,
-                'partial_link_text': By.PARTIAL_LINK_TEXT,
-                'tag_name': By.TAG_NAME,
-                'class_name': By.CLASS_NAME,
-                }
-
-
-def page_element(klass=PageElement, **kwargs):
-    """ Factory method for page elements
+    """Page Element descriptor.
 
     :param css:    `str`
         Use this css locator
@@ -97,27 +55,81 @@ def page_element(klass=PageElement, **kwargs):
     :param class_name:    `str`
         Use this class locator
 
-    Page Elements can be used like this::
+    :param context: `bool`
+        This element is expected to be called with context
 
-        >>> from page_objects import PageObject, page_element
+    Page Elements are used to access elements on a page. The are constructed
+    using this factory method to specify the locator for the element.
+
+        >>> from page_objects import PageObject, PageElement
         >>> class MyPage(PageObject):
-                elem1 = page_element(css='div.myclass')
-                elem2 = page_element(id_='foo')
+                elem1 = PageElement(css='div.myclass')
+                elem2 = PageElement(id_='foo')
+                elem_with_context = PageElement(name='bar', context=True)
 
+    Page Elements act as property descriptors for their Page Object, you can get
+    and set them as normal attributes.
     """
-    if not kwargs:
-        raise ValueError("Please specify a locator")
-    if len(kwargs) > 1:
-        raise ValueError("Please specify only one locator")
-    k, v = next(iter(kwargs.items()))
+    def __init__(self, context=False, **kwargs):
+        if not kwargs:
+            raise ValueError("Please specify a locator")
+        if len(kwargs) > 1:
+            raise ValueError("Please specify only one locator")
+        k, v = next(iter(kwargs.items()))
+        self.locator = (_LOCATOR_MAP[k], v)
+        self.has_context = bool(context)
 
-    class Element(klass):
-        locator = (_LOCATOR_MAP[k], v)
+    def find(self, context):
+        try:
+            return context.find_element(*self.locator)
+        except NoSuchElementException:
+            return None
 
-    return Element()
+    def __get__(self, instance, owner, context=None):
+        if not instance:
+            return None
+
+        if not context and self.has_context:
+            return lambda ctx: self.__get__(instance, owner, context=ctx)
+
+        if not context:
+            context = instance.w
+
+        return self.find(context)
+
+    def __set__(self, instance, value):
+        if self.has_context:
+            raise ValueError("Sorry, the set descriptor doesn't support elements with context.")
+        elem = self.__get__(instance, instance.__class__)
+        if not elem:
+            raise ValueError("Can't set value, element not found")
+        elem.send_keys(value)
 
 
-def multi_page_element(**kwargs):
-    """ As for `page_element`, but returns a `MutliPageElement`
+class MultiPageElement(PageElement):
+    """ Like `PageElement` but returns multiple results.
+
+        >>> from page_objects import PageObject, MultiPageElement
+        >>> class MyPage(PageObject):
+                all_table_rows = MultiPageElement(tag='tr')
+                elem2 = PageElement(id_='foo')
+                elem_with_context = PageElement(tag='tr', context=True)
     """
-    return page_element(klass=MultiPageElement, **kwargs)
+    def find(self, context):
+        try:
+            return context.find_elements(*self.locator)
+        except NoSuchElementException:
+            return []
+
+    def __set__(self, instance, value):
+        if self.has_context:
+            raise ValueError("Sorry, the set descriptor doesn't support elements with context.")
+        elems = self.__get__(instance, instance.__class__)
+        if not elems:
+            raise ValueError("Can't set value, no elements found")
+        [elem.send_keys(value) for elem in elems]
+
+
+# Backwards compatibility with previous versions that used factory methods
+page_element = PageElement
+multi_page_element = MultiPageElement
