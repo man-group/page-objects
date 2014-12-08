@@ -10,6 +10,8 @@ This project is an implementation of this pattern for Python using Selenium
 webdriver. It is agnostic to test harnesses and designed to help you build up
 libraries of code to test your sites.
 
+The Python Selenium API is documented here: http://selenium-python.readthedocs.org
+
 
 Quick Example
 -------------
@@ -46,6 +48,9 @@ Table Of Contents
 
 .. toctree::
 
+      introduction
+      tutorial
+      best_practices
       history
 
 * :ref:`genindex`
