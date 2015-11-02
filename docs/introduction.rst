@@ -2,7 +2,7 @@ Introduction
 ============
 
 Browser-based testing is hard to get right. There are wonderful tools out
-there like Seleinum that allow us to drive a web browser around our sites
+there like Selenium that allow us to drive a web browser around our sites
 with the minimum of effort to provide true integration tests.
 
 With this great power however, comes a great way to create thousands of lines
