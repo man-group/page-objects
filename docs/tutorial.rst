@@ -199,12 +199,12 @@ Take this example where there are more than one login form on the page:
 
     <html>
         <body>
-            <form id="login-1" type="POST" action="/login-1">
+            <form id="form-1" type="POST" action="/login-1">
                 <input type="text" name="username"></input>
                 <input type="password" name="password"></input>
                 <input type="submit">Submit</input>
             </form>
-            <form id="login-2" type="POST" action="/login-2">
+            <form id="form-2" type="POST" action="/login-2">
                 <input type="text" name="username"></input>
                 <input type="password" name="password"></input>
                 <input type="submit">Submit</input>
@@ -222,18 +222,25 @@ You could have separate page elements for each form input, like this:
             submit_2 = PageElement(css='#form-2 input[type="submit"]')
 
 
-However, you can also construct the page elements with the ``context`` flag set like this:
+However, you can also construct the page elements with the ``context`` like this:
 
 .. code-block:: python
 
     >>> class LoginPage(PageObject):
             form1 = PageElement(id_='form-1')
-            form2 = PageElement(id_='form-1')
-            submit = PageElement(css='input[type="submit"]', context=True)
+            form2 = PageElement(id_='form-2')
+            submit1 = PageElement(css='input[type="submit"]', context='form1')
+            submit2 = PageElement(css='input[type="submit"]', context='form2')
 
-
-This allows you to access the submit element *within* a form element, by calling
+Or you can access the submit element *within* a form element, by calling
 the submit element like you would a method:
+
+.. code-block:: python
+
+    >>> class LoginPage(PageObject):
+            form1 = PageElement(id_='form-1')
+            form2 = PageElement(id_='form-2')
+            submit = PageElement(css='input[type="submit"]')
 
 .. code-block:: python
 
