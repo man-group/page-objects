@@ -1,7 +1,0 @@
-language: python
-script:
-  - make test
-env:
-  - TOXENV=py26
-  - TOXENV=py27
-  - TOXENV=py34

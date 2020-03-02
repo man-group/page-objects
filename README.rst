@@ -23,7 +23,142 @@ https://page-objects.readthedocs.org
 Quick Example
 -------------
 
-    >>> from page_objects import PageObject, PageElement
+    >>> from page_objects import PageObject, Element
+            >>> from selenium import webdriver
+            >>>
+            >>> class LoginPage(PageObject):
+                    username = PageElement(id_='username')
+                    password = PageElement(name='password')
+                    login = PageElement(css='input[type="submit"]')
+            >>>
+            >>> driver = webdriver.PhantomJS()
+            >>> driver.root_uri = "http://example.com"
+            >>> page = LoginPage(driver)
+            >>> page.visit("/login")
+            >>> page.username = 'secret'
+            >>> page.password = 'squirrel'
+            >>> assert page.username.text == 'secret'
+            >>> page.login.click()
+        >>> from selenium import webdriver
+        >>>
+        >>> class LoginPage(PageObject):
+                username = PageElement(id_='username')
+                password = PageElement(name='password')
+                login = PageElement(css='input[type="submit"]')
+        >>>
+        >>> driver = webdriver.PhantomJS()
+        >>> driver.root_uri = "http://example.com"
+        >>> page = LoginPage(driver)
+        >>> page.get("/login")
+        >>> page.username = 'secret'
+        >>> page.password = 'squirrel'
+        >>> assert page.username.text == 'secret'
+        >>> page.login.click()
+            >>> from selenium import webdriver
+            >>>
+            >>> class LoginPage(PageObject):
+                    username = PageElement(id_='username')
+                    password = PageElement(name='password')
+                    login = PageElement(css='input[type="submit"]')
+            >>>
+            >>> driver = webdriver.PhantomJS()
+            >>> driver.root_uri = "http://example.com"
+            >>> page = LoginPage(driver)
+            >>> page.visit("/login")
+            >>> page.username = 'secret'
+            >>> page.password = 'squirrel'
+            >>> assert page.username.text == 'secret'
+            >>> page.login.click()
+        >>> from selenium import webdriver
+        >>>
+        >>> class LoginPage(PageObject):
+                username = PageElement(id_='username')
+                password = PageElement(name='password')
+                login = PageElement(css='input[type="submit"]')
+        >>>
+        >>> driver = webdriver.PhantomJS()
+        >>> driver.root_uri = "http://example.com"
+        >>> page = LoginPage(driver)
+        >>> page.get("/login")
+        >>> page.username = 'secret'
+        >>> page.password = 'squirrel'
+        >>> assert page.username.text == 'secret'
+        >>> page.login.click()
+            >>> from selenium import webdriver
+            >>>
+            >>> class LoginPage(PageObject):
+                    username = PageElement(id_='username')
+                    password = PageElement(name='password')
+                    login = PageElement(css='input[type="submit"]')
+            >>>
+            >>> driver = webdriver.PhantomJS()
+            >>> driver.root_uri = "http://example.com"
+            >>> page = LoginPage(driver)
+            >>> page.get("/login")
+            >>> page.username = 'secret'
+            >>> page.password = 'squirrel'
+            >>> assert page.username.text == 'secret'
+            >>> page.login.click()
+        >>> from selenium import webdriver
+        >>>
+        >>> class LoginPage(PageObject):
+                username = PageElement(id_='username')
+                password = PageElement(name='password')
+                login = PageElement(css='input[type="submit"]')
+        >>>
+        >>> driver = webdriver.PhantomJS()
+        >>> driver.root_uri = "http://example.com"
+        >>> page = LoginPage(driver)
+        >>> page.visit("/login")
+        >>> page.username = 'secret'
+        >>> page.password = 'squirrel'
+        >>> assert page.username.text == 'secret'
+        >>> page.login.click()
+            >>> from selenium import webdriver
+            >>>
+            >>> class LoginPage(PageObject):
+                    username = PageElement(id_='username')
+                    password = PageElement(name='password')
+                    login = PageElement(css='input[type="submit"]')
+            >>>
+            >>> driver = webdriver.PhantomJS()
+            >>> driver.root_uri = "http://example.com"
+            >>> page = LoginPage(driver)
+            >>> page.get("/login")
+            >>> page.username = 'secret'
+            >>> page.password = 'squirrel'
+            >>> assert page.username.text == 'secret'
+            >>> page.login.click()
+        >>> from selenium import webdriver
+        >>>
+        >>> class LoginPage(PageObject):
+                username = PageElement(id_='username')
+                password = PageElement(name='password')
+                login = PageElement(css='input[type="submit"]')
+        >>>
+        >>> driver = webdriver.PhantomJS()
+        >>> driver.root_uri = "http://example.com"
+        >>> page = LoginPage(driver)
+        >>> page.visit("/login")
+        >>> page.username = 'secret'
+        >>> page.password = 'squirrel'
+        >>> assert page.username.text == 'secret'
+        >>> page.login.click()
+        >>> from selenium import webdriver
+        >>>
+        >>> class LoginPage(PageObject):
+                username = PageElement(id_='username')
+                password = PageElement(name='password')
+                login = PageElement(css='input[type="submit"]')
+        >>>
+        >>> driver = webdriver.PhantomJS()
+        >>> driver.root_uri = "http://example.com"
+        >>> page = LoginPage(driver)
+        >>> page.get("/login")
+        >>> page.username = 'secret'
+        >>> page.password = 'squirrel'
+        >>> assert page.username.text == 'secret'
+        >>> page.login.click()
     >>> from selenium import webdriver
     >>>
     >>> class LoginPage(PageObject):

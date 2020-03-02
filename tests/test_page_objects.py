@@ -11,7 +11,7 @@ from selenium.webdriver.remote.webdriver import WebDriver, WebElement
 from selenium.common.exceptions import NoSuchElementException
 
 
-from page_objects import PageObject, PageElement, MultiPageElement
+from page_objects import PageObject, Element, Elements
 
 
 @pytest.fixture()
@@ -22,25 +22,25 @@ def webdriver():
 class TestConstructor:
 
     def test_page_element(self):
-        elem = PageElement(css='foo')
+        elem = Element(css='foo')
         assert elem.locator == (By.CSS_SELECTOR, 'foo')
 
     def test_multi_page_element(self):
-        elem = MultiPageElement(id_='bar')
+        elem = Elements(id_='bar')
         assert elem.locator == (By.ID, 'bar')
 
     def test_page_element_bad_args(self):
         with pytest.raises(ValueError):
-            PageElement()
+            Element()
         with pytest.raises(ValueError):
-            PageElement(id_='foo', xpath='bar')
+            Element(id_='foo', xpath='bar')
 
 
 class TestGet:
     def test_get_descriptors(self, webdriver):
         class TestPage(PageObject):
-            test_elem1 = PageElement(css='foo')
-            test_elem2 = PageElement(id_='bar')
+            test_elem1 = Element(css='foo')
+            test_elem2 = Element(id_='bar')
 
         webdriver.find_element.side_effect = ["XXX", "YYY"]
         page = TestPage(webdriver=webdriver)
@@ -53,7 +53,7 @@ class TestGet:
 
     def test_get_element_with_context(self, webdriver):
         class TestPage(PageObject):
-            test_elem = PageElement(css='bar', context=True)
+            test_elem = Element(css='bar', context=True)
 
         page = TestPage(webdriver=webdriver)
         elem = mock.Mock(spec=WebElement, name="My Elem")
@@ -63,18 +63,18 @@ class TestGet:
 
     def test_get_not_found(self, webdriver):
         class TestPage(PageObject):
-            test_elem = PageElement(css='bar')
+            test_elem = Element(css='bar')
 
         page = TestPage(webdriver=webdriver)
         webdriver.find_element.side_effect = NoSuchElementException
         assert page.test_elem is None
 
     def test_get_unattached(self):
-        assert PageElement(css='bar').__get__(None, None) is None
+        assert Element(css='bar').__get__(None, None) is None
 
     def test_get_multi(self, webdriver):
         class TestPage(PageObject):
-            test_elems = MultiPageElement(css='foo')
+            test_elems = Elements(css='foo')
 
         webdriver.find_elements.return_value = ["XXX", "YYY"]
         page = TestPage(webdriver=webdriver)
@@ -83,7 +83,7 @@ class TestGet:
 
     def test_get_multi_not_found(self, webdriver):
         class TestPage(PageObject):
-            test_elems = MultiPageElement(css='foo')
+            test_elems = Elements(css='foo')
 
         webdriver.find_elements.side_effect = NoSuchElementException
         page = TestPage(webdriver=webdriver)
@@ -93,7 +93,7 @@ class TestGet:
 class TestSet:
     def test_set_descriptors(self, webdriver):
         class TestPage(PageObject):
-            test_elem1 = PageElement(css='foo')
+            test_elem1 = Element(css='foo')
 
         page = TestPage(webdriver=webdriver)
         elem = mock.Mock(spec=WebElement, name="My Elem")
@@ -104,7 +104,7 @@ class TestSet:
 
     def test_cannot_set_with_context(self, webdriver):
         class TestPage(PageObject):
-            test_elem = PageElement(css='foo', context=True)
+            test_elem = Element(css='foo', context=True)
 
         page = TestPage(webdriver=webdriver)
         with pytest.raises(ValueError) as e:
@@ -113,7 +113,7 @@ class TestSet:
 
     def test_cannot_set_not_found(self, webdriver):
         class TestPage(PageObject):
-            test_elem = PageElement(css='foo')
+            test_elem = Element(css='foo')
 
         page = TestPage(webdriver=webdriver)
         webdriver.find_element.side_effect = NoSuchElementException
@@ -124,7 +124,7 @@ class TestSet:
 
     def test_set_multi(self, webdriver):
         class TestPage(PageObject):
-            test_elems = MultiPageElement(css='foo')
+            test_elems = Elements(css='foo')
 
         page = TestPage(webdriver=webdriver)
         elem1 = mock.Mock(spec=WebElement)
@@ -137,7 +137,7 @@ class TestSet:
 
     def test_cannot_set_multi_with_context(self, webdriver):
         class TestPage(PageObject):
-            test_elem = MultiPageElement(css='foo', context=True)
+            test_elem = Elements(css='foo', context=True)
 
         page = TestPage(webdriver=webdriver)
         with pytest.raises(ValueError) as e:
@@ -146,7 +146,7 @@ class TestSet:
 
     def test_cannot_set_multi_not_found(self, webdriver):
         class TestPage(PageObject):
-            test_elem = MultiPageElement(css='foo')
+            test_elem = Elements(css='foo')
 
         page = TestPage(webdriver=webdriver)
         webdriver.find_elements.side_effect = NoSuchElementException
@@ -172,10 +172,10 @@ class TestRootURI:
 
     def test_get(self, webdriver):
         page = self.TestPage(webdriver=webdriver, root_uri="http://example.com")
-        page.get('/foo/bar')
+        page.visit('/foo/bar')
         assert webdriver.get.called_once_with("http://example.com/foo/bar")
 
     def test_get_no_root(self, webdriver):
         page = self.TestPage(webdriver=webdriver)
-        page.get('/foo/bar')
+        page.visit('/foo/bar')
         assert webdriver.get.called_once_with("/foo/bar")

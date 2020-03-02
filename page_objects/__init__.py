@@ -24,18 +24,18 @@ class PageObject(object):
         in the constructor it will try and look it from the webdriver object.
     """
     def __init__(self, webdriver, root_uri=None):
-        self.w = webdriver
-        self.root_uri = root_uri if root_uri else getattr(self.w, 'root_uri', None)
+        self.driver = webdriver
+        self.root_uri = root_uri if root_uri else getattr(self.driver, 'root_uri', None)
 
-    def get(self, uri):
+    def visit(self, uri):
         """
         :param uri:  URI to GET, based off of the root_uri attribute.
         """
         root_uri = self.root_uri or ''
-        self.w.get(root_uri + uri)
+        self.driver.get(root_uri + uri)
 
 
-class PageElement(object):
+class Element(object):
     """Page Element descriptor.
 
     :param css:    `str`
@@ -61,7 +61,7 @@ class PageElement(object):
     Page Elements are used to access elements on a page. The are constructed
     using this factory method to specify the locator for the element.
 
-        >>> from page_objects import PageObject, PageElement
+        >>> from page_objects import PageObject, Element
         >>> class MyPage(PageObject):
                 elem1 = PageElement(css='div.myclass')
                 elem2 = PageElement(id_='foo')
@@ -93,7 +93,7 @@ class PageElement(object):
             return lambda ctx: self.__get__(instance, owner, context=ctx)
 
         if not context:
-            context = instance.w
+            context = instance.driver
 
         return self.find(context)
 
@@ -106,10 +106,10 @@ class PageElement(object):
         elem.send_keys(value)
 
 
-class MultiPageElement(PageElement):
+class Elements(Element):
     """ Like `PageElement` but returns multiple results.
 
-        >>> from page_objects import PageObject, MultiPageElement
+        >>> from page_objects import PageObject, Elements
         >>> class MyPage(PageObject):
                 all_table_rows = MultiPageElement(tag='tr')
                 elem2 = PageElement(id_='foo')
@@ -131,5 +131,5 @@ class MultiPageElement(PageElement):
 
 
 # Backwards compatibility with previous versions that used factory methods
-page_element = PageElement
-multi_page_element = MultiPageElement
+page_element = Element
+multi_page_element = Elements
